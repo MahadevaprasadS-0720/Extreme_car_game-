@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex Velocity 3D | Ultra-Realistic R3F Racing Experience</title>
+    <meta name="description" content="High-performance 3D racing environment built with React Three Fiber, Rapier physics, PBR lighting, and post-processing." />
+    <script>
+      // 1. Intercept unhandled promise rejections & Chrome extension message channel errors
+      window.addEventListener('unhandledrejection', function(e) {
+        var msg = (e && e.reason && (e.reason.message || e.reason.stack || String(e.reason))) || '';
+        if (
+          msg.includes('message channel closed') ||
+          msg.includes('asynchronous response') ||
+          msg.includes('Extension context invalidated') ||
+          msg.includes('FILE_ERROR_NO_SPACE')
+        ) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      });
+      window.onunhandledrejection = function(e) {
+        var msg = (e && e.reason && (e.reason.message || e.reason.stack || String(e.reason))) || '';
+        if (
+          msg.includes('message channel closed') ||
+          msg.includes('asynchronous response') ||
+          msg.includes('Extension context invalidated') ||
+          msg.includes('FILE_ERROR_NO_SPACE')
+        ) {
+          if (e.preventDefault) e.preventDefault();
+          return true;
+        }
+      };
+
+      // 2. Intercept global runtime errors from browser extensions
+      window.addEventListener('error', function(e) {
+        var msg = (e && (e.message || (e.error && e.error.message))) || '';
+        if (
+          msg.includes('message channel closed') ||
+          msg.includes('asynchronous response') ||
+          msg.includes('Extension context invalidated') ||
+          msg.includes('FILE_ERROR_NO_SPACE')
+        ) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+      });
+      window.onerror = function(msg) {
+        var str = String(msg || '');
+        if (
+          str.includes('message channel closed') ||
+          str.includes('asynchronous response') ||
+          str.includes('Extension context invalidated') ||
+          str.includes('FILE_ERROR_NO_SPACE')
+        ) {
+          return true;
+        }
+      };
+
+      // 3. Clean console outputs (extension noise, DevTools prompts, texture warnings, engine deprecations)
+      var _origInfo = console.info;
+      console.info = function() {
+        var str = Array.prototype.slice.call(arguments).map(String).join(' ');
+        if (str.includes('React DevTools') || str.includes('react.dev/link/react-devtools')) {
+          return;
+        }
+        _origInfo.apply(console, arguments);
+      };
+
+      var _origLog = console.log;
+      console.log = function() {
+        var str = Array.prototype.slice.call(arguments).map(String).join(' ');
+        if (str.includes('React DevTools') || str.includes('react.dev/link/react-devtools')) {
+          return;
+        }
+        _origLog.apply(console, arguments);
+      };
+
+      var _origWarn = console.warn;
+      console.warn = function() {
+        var str = Array.prototype.slice.call(arguments).map(String).join(' ');
+        if (
+          str.includes('deprecated parameters') ||
+          str.includes('KHR_materials_pbrSpecularGlossiness') ||
+          str.includes('React DevTools') ||
+          str.includes('shimmed') ||
+          str.includes('Fast Refresh')
+        ) {
+          return;
+        }
+        _origWarn.apply(console, arguments);
+      };
+
+      var _origErr = console.error;
+      console.error = function() {
+        var str = Array.prototype.slice.call(arguments).map(String).join(' ');
+        if (
+          str.includes('message channel closed') ||
+          str.includes('asynchronous response') ||
+          str.includes('Extension context invalidated') ||
+          str.includes('FILE_ERROR_NO_SPACE') ||
+          str.includes("Couldn't load texture") ||
+          str.includes('GLTFLoader')
+        ) {
+          return;
+        }
+        _origErr.apply(console, arguments);
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="/models/city_track_1k.glb" as="fetch" crossorigin>
+    <link rel="preload" href="/models/bmw_m4.glb" as="fetch" crossorigin>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
